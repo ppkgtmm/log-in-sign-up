@@ -3,4 +3,5 @@ WORKDIR /app
 ADD package*.json ./
 RUN npm install
 ADD . .
-CMD node index.js
+ARG PORT
+CMD PORT=$PORT node index.js

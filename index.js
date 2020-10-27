@@ -1,27 +1,24 @@
 const express = require('express')
-const app = express()
-const port = 3000
+const cookieParser = require('cookie-parser')
+const connect = require('./database/database')
 
-app.get('/', (req, res) => {
-  res.json([
-    {
-        name: "Bob",
-        email: "bob@gmail.com"
-    },
-    { 
-        name: "Sarah",
-        email: "sarah@hotmail.com"
-    },
-    {
-        name: "Andy",
-        email: "andy@yahoo.com"
-    },
-    {
-      name: "James",
-      email: "james@msn.co.uk"
-    }])
+const app = express()
+const port = process.env.PORT || 3000
+
+app.use(express.json())
+
+app.use(express.urlencoded({ extended: false }))
+
+app.use(cookieParser())
+
+connect()
+
+app.use((req, res, next) => {
+  res.status(404).json({
+    error: 'unknown path specified'
+  })
 })
 
 app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`)
+  console.log(`listening on port: ${port}`)
 })
