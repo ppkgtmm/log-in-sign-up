@@ -3,63 +3,82 @@ const user = require('../models/user')
 
 const router = express.Router();
 
-async function isUnique(fieldName, value, model){
-    const condition = { }
-    condition[fieldName] = value
-    const query  = model.findOne(condition)
+async function getDocument(fields, values, model, wanted){
+    let condition = { }
+    if(fields.length !== values.length){
+        return { error: true }
+    }
+    for(i in values){
+        condition[fields[i]] = values[i]
+    }
+    const columns = wanted.reduce((latest, current) => {
+        return `${latest} ${current}`
+    }).trim()
+    const query  = model.findOne(condition).select(columns)
     const promise = query.exec()
     return await promise.then(document => {
-        if(document){
-            const result = { 
-                error: false
+        if(document && document._doc){
+            return {
+                error: false,
+                document: {
+                    ...document._doc
+                }
             }
-            result[fieldName] = `${fieldName} has already been taken`
-            return result
         }
+        return { error: false }
     }).catch( error => {
         if(error){
-            return {
-                error: true
-            }
+            return { error: true }
         }
     })
 }
 
-async function checkUnique(newUser, mustUnique, model) {
+async function checkUnique(newObject, mustUnique, model) {
     const notUnique = { }
     for(i in mustUnique){
         field = mustUnique[i]
-        const result = await isUnique(field, newUser[field], model)
-        if(result && result.error){
-            return {
-                error: true
-            }
+        value = newObject[field]
+        const result = await getDocument([field], [value], model, [field])
+        if(result && result.error === true){
+            return { error: true }
         }
-        else if(result && !result.error && result[field]){
-                notUnique[field] = result[field]
+        else if(result && result.error === false && result.document){
+                notUnique[field] = `${field} has already been taken`
         }
     }
     if(Object.keys(notUnique).length>0){
-        // console.log(notUnique)
         return {
             error: true,
             messages: notUnique
         }
     }
-    return {
-        error: false
+    return { error: false }
+}
+
+async function save(newObject, select) {
+    try{
+        const savedUser = await newObject.save()
+        if(savedUser && savedUser._doc){
+            const selected = { }
+            for(i in select){
+                if(savedUser._doc[select[i]]){
+                    selected[select[i]] = savedUser._doc[select[i]]
+                }
+            }
+            return {
+                error: false,
+                selected
+            }
+        }
+        return { error: true }
+    }
+    catch(error){
+        console.log(error)
+        return { error: true }
     }
 }
 
-function save(newUser) {
-    newUser.save((err) => {
-        if(err){
-            console.log(err)
-            return false
-        }
-        return true
-    })
-}
+
 
 function validate(newUser){
     let isError = false
@@ -82,14 +101,10 @@ function validate(newUser){
 }
 
 router.post('/signup/', async function(req, res) {
-    const { firstname, lastname, email, password } = req.body
     const newUser = new user({
-        firstname,
-        lastname,
-        email,
-        password,
-        token: 'mmm'
+        ...req.body
     })
+    const nonHidden = ['firstname','lastname','email']
     const { error, messages } = validate(newUser)
         if(error){
             res.status(400).json({
@@ -100,24 +115,26 @@ router.post('/signup/', async function(req, res) {
         else{
             const mustUnique = ['email']
             const { error, messages } = await checkUnique(newUser, mustUnique, user)
-            if(error == true && messages){
+            if(error === true && messages){
                 res.status(400).json({
                     success: false,
                     ...messages
                 })
             }
-            else if(error == true){
+            else if(error === true){
                 res.status(500).json({
                     success: false,
                     message: 'some error occurred during sign up'
                 })
             }
             else{
-                const success = save(newUser)
-                if(success){
+                const { error, selected } = await save(newUser, nonHidden)
+                if(!error && selected){
                     res.status(201).json({
                         success: true,
-                        message: 'user has successfully signed up'
+                        data: {
+                            ...selected
+                        }
                     })
                 }
                 else{

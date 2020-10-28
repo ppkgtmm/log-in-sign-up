@@ -23,8 +23,7 @@ const user = mongoose.Schema({
         minlength: [8, 'length of password should be at least 8 characters']
     },
     token:{
-        type: String,
-        required: [true, 'token is required']
+        type: String
     }
 })
 
