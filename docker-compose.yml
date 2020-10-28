@@ -11,6 +11,8 @@ services:
                 PORT: ${PORT}
         ports: 
             - 3000:${PORT}
+        volumes:
+            - ".:/app:rw"
         links:
             - mongo
     mongo:
