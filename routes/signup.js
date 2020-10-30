@@ -2,7 +2,7 @@ const express = require('express');
 const validate = require('../utils/validate')
 const {getOne,save} = require('../utils/database')
 const filter = require('../utils/object')
-const hash = require('../middleware/hash')
+const {hash} = require('../middleware/hash')
 const user = require('../models/user')
 
 const router = express.Router();
@@ -71,22 +71,33 @@ router.post('/signup/', async function(req, res) {
                     })
                 }
                 else{
-                    newUser.password = await hash(newUser.password, saltRounds)
-                    newUser.token = ""
-                    const { error, _doc } = await save(newUser)
-                    if(!error && _doc){
-                        res.status(201).json({
-                            success: true,
-                            data: {
-                                ...filter(_doc, nonHidden)
-                            }
-                        })
+                    const hashed = await hash(newUser.password, saltRounds)
+                    if(hashed){
+                        newUser.password = hashed
+                        newUser.token = ""
+                        const { error, _doc } = await save(newUser)
+                        if(!error && _doc){
+                            res.status(201).json({
+                                success: true,
+                                data: {
+                                    ...filter(_doc, nonHidden)
+                                }
+                            })
+                        }
+                        else{
+                            res.status(500).json({
+                                success: false,
+                                messages: {
+                                    error: 'some error occurred during sign up'
+                                }
+                            })
+                        }
                     }
                     else{
                         res.status(500).json({
                             success: false,
                             messages: {
-                                error: 'some error occurred during sign up'
+                               error: 'some error occurred during sign up'
                             }
                         })
                     }

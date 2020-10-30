@@ -2,12 +2,19 @@ const bcrypt = require('bcrypt')
 
 async function hash(data, saltRounds) {
     try{
-        hash = await bcrypt.hash(data, saltRounds)
-        return hash
+        return await bcrypt.hash(data, saltRounds)
     }
     catch(error){
         console.log(error)
     }
 }
 
-module.exports = hash
+async function doesMatch(password, hash) {
+    try{
+        return await bcrypt.compare(password, hash)
+    }
+    catch(error){
+        console.log(error)
+    }
+}
+module.exports = { hash, doesMatch }
