@@ -23,11 +23,11 @@ app.use("/v1",signup)
 app.use("/v1",login)
 
 app.use((req, res) => {
-	res.status(404).json({
-		error: "unknown path specified"
-	})
+    res.status(404).json({
+        error: "unknown path specified"
+    })
 })
 
 app.listen(port, () => {
-	console.log(`listening on port: ${port}`)
+    console.log(`listening on port: ${port}`)
 })

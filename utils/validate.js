@@ -6,7 +6,7 @@ function getErrorsMessages(errorObj){
     const error = errorObj.errors
     const fields = Object.keys(error)
 
-    const messages = { }
+    const messages = {}
     fields.forEach(field => {
         if(field && error[field].message){
             messages[field] = error[field].message
@@ -23,7 +23,7 @@ function getErrorsMessages(errorObj){
 
 function validate(newObject){
     try{
-        let errors = newObject.validateSync();
+        let errors = newObject.validateSync()
         return getErrorsMessages(errors)
     }
     catch(error){

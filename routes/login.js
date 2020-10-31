@@ -1,14 +1,14 @@
-const express = require('express');
-const { doesMatch } = require('../utils')
-const { getOne } = require('../utils/database')
-const response = require('../utils/response')
-const filter = require('../utils/object')
-const { generateToken, decode } = require('../utils/jwt')
-const user = require('../models/user')
+const express = require("express")
+const { doesMatch } = require("../utils")
+const { getOne } = require("../utils/database")
+const response = require("../utils/response")
+const filter = require("../utils/object")
+const { generateToken, decode } = require("../utils/jwt")
+const user = require("../models/user")
 
-const router = express.Router();
+const router = express.Router()
 
-const noneHidden = ['firstname', 'lastname', 'email', 'token']
+const noneHidden = ["firstname", "lastname", "email", "token"]
 const serverError = { error: "some error occured during login" }
 const clientError = { error: "email or password is incorrect" }
 const incomplete = { error: "both email and password are required" }
@@ -48,30 +48,30 @@ async function handleTokenExist(targetUser) {
 
 function sendFinalRespond(res, user) {
     if(user !== undefined){
-        response(res, 200, { }, { }, filter(user, noneHidden))
+        response(res, 200, {}, {}, filter(user, noneHidden))
     }
     else{
-        response(res, 500, { }, serverError, { })
+        response(res, 500, {}, serverError, {})
     }
 }
 
-router.post('/login/', async function(req, res) {
+router.post("/login/", async function(req, res) {
     const { email, password } = req.body
     if(email && password){
-        const { error, document } = await getOne(['email'], [email], user, [])
+        const { error, document } = await getOne(["email"], [email], user, [])
         if(error === true){
-            response(res, 500, { }, serverError, { })
+            response(res, 500, {}, serverError, {})
         }
         else if(!document){
-            response(res, 400, { }, clientError, { })
+            response(res, 400, {}, clientError, {})
         }
         else{
             const passwordMatch =  await doesMatch(password, document.password)
             if(passwordMatch === undefined){
-                response(res, 500, { }, serverError, { })
+                response(res, 500, {}, serverError, {})
             }
             else if(passwordMatch === false){
-                response(res, 400, { }, clientError, { })
+                response(res, 400, {}, clientError, {})
             }
             else{
                 if(document.token && document.token.trim().length>0){
@@ -87,7 +87,7 @@ router.post('/login/', async function(req, res) {
         }
     }
     else{
-        response(res, 400, { }, incomplete, { })
+        response(res, 400, {}, incomplete, {})
     }
 
 })
