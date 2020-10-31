@@ -1,65 +1,94 @@
 const express = require('express');
-const { doesMatch } = require('../middleware/hash')
+const { doesMatch } = require('../utils')
 const { getOne } = require('../utils/database')
+const response = require('../utils/response')
 const filter = require('../utils/object')
-const generateToken = require('../middleware/jwt')
+const { generateToken, decode } = require('../utils/jwt')
 const user = require('../models/user')
 
 const router = express.Router();
 
-router.post('/login/', async function(req, res) {
-    const noneHidden = ['firstname', 'lastname', 'email', 'token']
-    const { email, password } = req.body
-    const { document } = await getOne(['email'], [email], user, [])
-    if(document && document.password){
-        const matched = await doesMatch(password, document.password)
-        if(matched === true){
-            if(document.token && document.token.trim().length>0){
-                console.log(document.token)
+const noneHidden = ['firstname', 'lastname', 'email', 'token']
+const serverError = { error: "some error occured during login" }
+const clientError = { error: "email or password is incorrect" }
+const incomplete = { error: "both email and password are required" }
+
+async function updateToken(targetUser) {
+    if(targetUser){
+        const token = await generateToken(targetUser)
+        if(token !== undefined){
+            const condition = {
+                _id: targetUser._id
             }
-            else{
-                const token = await generateToken(document)
-                const condition = {
-                    _id: document._id
-                }
+            try{
                 const updated = await user.findByIdAndUpdate(condition, { token }, { new: true })
                 if(updated && updated._doc){
-                    res.status(200).json({
-                        success: true,
-                        data: {
-                            ...filter(updated._doc, noneHidden)
-                        }
-                    })
-                }
-                else{
-                    res.status(500).json({
-                        success: false,
-                        messages: {
-                            error: 'some error occurred during log in'
-                        }
-                    })
+                    return updated._doc
                 }
             }
-        }
-        else if(matched === false){
-            // status code may be wrong
-            res.status(400).json({
-                success: false,
-                messages: {
-                   error: 'email or password is invalid'
-                }
-            })
-        }
-        else{
-            res.status(500).json({
-                success: false,
-                messages: {
-                    error: 'some error occurred during log in'
-                }
-            })
+            catch(error){
+                console.log(error)
+            } 
         }
     }
-    
+}
+
+async function handleTokenExist(targetUser) {
+    if(targetUser &&  targetUser.token){
+        const token = await decode(targetUser.token)
+        if(token && token.exp){
+            const now = new Date().getTime()
+            if(token.exp <= now){
+                return await updateToken(targetUser)
+            }
+            return targetUser
+        }
+    }
+}
+
+function sendFinalRespond(res, user) {
+    if(user !== undefined){
+        response(res, 200, { }, { }, filter(user, noneHidden))
+    }
+    else{
+        response(res, 500, { }, serverError, { })
+    }
+}
+
+router.post('/login/', async function(req, res) {
+    const { email, password } = req.body
+    if(email && password){
+        const { error, document } = await getOne(['email'], [email], user, [])
+        if(error === true){
+            response(res, 500, { }, serverError, { })
+        }
+        else if(!document){
+            response(res, 400, { }, clientError, { })
+        }
+        else{
+            const passwordMatch =  await doesMatch(password, document.password)
+            if(passwordMatch === undefined){
+                response(res, 500, { }, serverError, { })
+            }
+            else if(passwordMatch === false){
+                response(res, 400, { }, clientError, { })
+            }
+            else{
+                if(document.token && document.token.trim().length>0){
+                    const targetUser = await handleTokenExist(document)
+                    sendFinalRespond(res, targetUser)
+                }
+                else{
+                    const updatedUser = await updateToken(document)
+                    sendFinalRespond(res, updatedUser)
+                }
+
+            }
+        }
+    }
+    else{
+        response(res, 400, { }, incomplete, { })
+    }
 
 })
 

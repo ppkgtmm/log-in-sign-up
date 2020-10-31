@@ -3,7 +3,7 @@ const validate = require('../utils/validate')
 const {getOne,save} = require('../utils/database')
 const response = require('../utils/response')
 const filter = require('../utils/object')
-const {hash} = require('../middleware/hash')
+const {hash} = require('../utils/hash')
 const user = require('../models/user');
 
 const router = express.Router();
