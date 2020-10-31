@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const config = require('./config')
+const config = require('../config')
 
 function connect() {
     mongoose.connect(config.DATABASE,{ useNewUrlParser: true, useUnifiedTopology: true }, function(error) {

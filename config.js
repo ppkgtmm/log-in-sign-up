@@ -1,5 +1,5 @@
 const config = {
-    SECRET: 'mysecret',
+    KEY: 'ITisAKeythatYOUmayNOTknow',
     DATABASE: 'mongodb://localhost:27017/Users'
 }
 
