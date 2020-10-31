@@ -5,17 +5,20 @@ const user = mongoose.Schema({
     firstname: {
         type: String,
         required: [true, 'firstname cannot be empty'],
-        maxlength: [128, 'firstname is too long']
+        maxlength: [128, 'firstname is too long'],
+        trim: true
     },
     lastname: {
         type: String,
         required: [true, 'lastname cannot be empty'],
-        maxlength: [128, 'lastname is too long']
+        maxlength: [128, 'lastname is too long'],
+        trim: true
     },
     email:{
         type: String,
         required: [true, 'email is required'],
-        unique: true
+        unique: true,
+        trim: true
     },
     password:{
         type: String,

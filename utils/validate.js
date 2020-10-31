@@ -1,20 +1,34 @@
-function validate(newUser){
-    let isError = false
-    const errorMessages = { }
-    let error = newUser.validateSync();
-    if(error && error.errors){
-        error = error.errors
-        fields = Object.keys(error)
-        fields.forEach(field => {
-            if(field && error[field].message){
-                errorMessages[field] = error[field].message
-                isError = true
-            }
-        })
+function getErrorsMessages(errorObj){
+    if(!errorObj || !errorObj.errors){
+        return { error: false }
     }
-    return {
-        error: isError,
-        messages: errorMessages
+
+    const error = errorObj.errors
+    const fields = Object.keys(error)
+
+    const messages = { }
+    fields.forEach(field => {
+        if(field && error[field].message){
+            messages[field] = error[field].message
+        }
+    })
+
+    if(Object.keys(messages).length === 0){
+        return { error: false }
+    }
+
+    return { error: true, messages}
+}
+
+
+function validate(newObject){
+    try{
+        let errors = newObject.validateSync();
+        return getErrorsMessages(errors)
+    }
+    catch(error){
+        console.log(error)
+        return
     }
 }
 
