@@ -1,5 +1,5 @@
 const express = require("express")
-const { doesMatch } = require("../utils")
+const { doesMatch } = require("../utils/hash")
 const { getOne } = require("../utils/database")
 const response = require("../utils/response")
 const filter = require("../utils/object")
