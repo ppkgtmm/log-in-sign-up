@@ -1,4 +1,3 @@
-const express = require("express")
 const validate = require("../utils/validate")
 const {getOne,save} = require("../utils/database")
 const response = require("../utils/response")
@@ -6,7 +5,6 @@ const filter = require("../utils/object")
 const {hash} = require("../utils/hash")
 const user = require("../models/user")
 
-const router = express.Router()
 const saltRounds = 10
 const nonHidden = ["firstname", "lastname", "email"]
 const mustUnique = ["email"]
@@ -55,7 +53,7 @@ async function register(newUser) {
     }
     return
 }
-router.post("/signup/", async function(req, res) {
+async function signupHandler(req, res) {
     const serverErrorMessage = { error: "some error occurred during sign up" }
     const newUser = new user({
         ...req.body
@@ -92,6 +90,6 @@ router.post("/signup/", async function(req, res) {
         }
 
     }
-})
+}
 
-module.exports = router
+module.exports = signupHandler

@@ -1,12 +1,9 @@
-const express = require("express")
 const { doesMatch } = require("../utils/hash")
 const { getOne } = require("../utils/database")
 const response = require("../utils/response")
 const filter = require("../utils/object")
 const { generateToken, decode } = require("../utils/jwt")
 const user = require("../models/user")
-
-const router = express.Router()
 
 const noneHidden = ["firstname", "lastname", "email", "token"]
 const serverError = { error: "some error occured during login" }
@@ -55,10 +52,10 @@ function sendFinalRespond(res, user) {
     }
 }
 
-router.post("/login/", async function(req, res) {
+async function loginHandler(req, res) {
     const { email, password } = req.body
     if(email && password){
-        const { error, document } = await getOne(["email"], [email], user, [])
+        const { error, document } = await getOne(["email"], [email.trim()], user, [])
         if(error === true){
             response(res, 500, {}, serverError, {})
         }
@@ -89,8 +86,7 @@ router.post("/login/", async function(req, res) {
     else{
         response(res, 400, {}, incomplete, {})
     }
+}
 
-})
 
-
-module.exports = router
+module.exports = loginHandler

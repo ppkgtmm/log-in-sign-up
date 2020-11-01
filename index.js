@@ -2,8 +2,7 @@ const express = require("express")
 const cookieParser = require("cookie-parser")
 const connect = require("./database/database")
 const home = require("./routes/index")
-const signup = require("./routes/signup")
-const login = require("./routes/login")
+const router = require("./routes/api")
 
 
 const app = express()
@@ -19,8 +18,7 @@ connect()
 
 app.use("/", home)
 
-app.use("/v1",signup)
-app.use("/v1",login)
+app.use("/v1",router)
 
 app.use((req, res) => {
     res.status(404).json({
@@ -28,6 +26,8 @@ app.use((req, res) => {
     })
 })
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
     console.log(`listening on port: ${port}`)
 })
+
+module.exports = server
