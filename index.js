@@ -1,7 +1,6 @@
 const express = require("express")
 const cookieParser = require("cookie-parser")
 const connect = require("./database/database")
-const home = require("./routes/index")
 const router = require("./routes/api")
 
 
@@ -16,9 +15,8 @@ app.use(cookieParser())
 
 connect()
 
-app.use("/", home)
 
-app.use("/v1",router)
+app.use("/",router)
 
 app.use((req, res) => {
     res.status(404).json({

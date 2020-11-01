@@ -1,11 +1,14 @@
 const express = require("express")
+const homePageHandler = require("../handlers/home")
 const signupHandler = require("../handlers/signup")
 const loginHandler = require("../handlers/login")
 const router = express.Router()
 
-router.post("/login/", loginHandler)
+router.get("/", homePageHandler)
 
-router.post("/signup/", signupHandler)
+router.post("/v1/login/", loginHandler)
+
+router.post("/v1/signup/", signupHandler)
 
 router.all("*", (req, res) => {
     res.status(404).json({
