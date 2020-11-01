@@ -1,6 +1,6 @@
 function handleHomePage(req, res) {
     res.status(200).json({
-        message: "Welcome to sign in / sign up"
+        messages: "Welcome to sign in / sign up"
     })
 }
 

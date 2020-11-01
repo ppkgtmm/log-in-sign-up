@@ -1,7 +1,7 @@
 const validate = require("../utils/validate")
 const {getOne,save} = require("../utils/database")
 const response = require("../utils/response")
-const filter = require("../utils/object")
+const { filter, keyExist } = require("../utils/object")
 const {hash} = require("../utils/hash")
 const user = require("../models/user")
 
@@ -59,11 +59,21 @@ async function signupHandler(req, res) {
         ...req.body
     })
     const { error, messages } = validate(newUser)
-    if(error === undefined && !messages){
+    if(error === undefined){
         response(res, 500, {}, serverErrorMessage, {})
     }
-    else if(error){
-        response(res, 400, {}, messages, {})
+    else if(error === true && messages){
+        if(keyExist(messages,"email") === true){
+            response(res, 400, {}, messages, {})
+        }
+        else{
+            if(isValidEmail(newUser.email) !== true){
+                response(res, 400, {}, { ...messages, email: "email has invalid format" }, {})
+            }
+            else{
+                response(res, 400, {}, messages, {})
+            }
+        }
     }
     else{
         if(isValidEmail(newUser.email) === true){

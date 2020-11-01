@@ -8,4 +8,12 @@ function filter(object, wanted) {
     return result
 }
 
-module.exports = filter
+function keyExist(object, key) {
+    if(object && object[key]){
+        return true
+    }
+    else if(object){
+        return false
+    }
+}
+module.exports = { filter, keyExist }
