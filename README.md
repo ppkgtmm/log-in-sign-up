@@ -1,5 +1,5 @@
 # log-in-sign-up
-Simple log in and sign up API created to practice Using Node.js, express and mongoDB
+Simple log in and sign up API created to practice using Node.js, express and mongoDB
 
 ## Data
 a user may have the following information stored
@@ -75,7 +75,13 @@ a user may have the following information stored
 * 400 : Failed to sign up due to invalid input
   * firstname or lastname exceed 128 characters
   * email has invalid format (valid email should be in form of USERNAME@DOMAIN_NAME.DOMAIN)
+  * email was already used for registration
   * password length is less than 8 characters
 * 500 : Some error occurred while processing
 ### Log in
-
+* 200 : User has logged in successfully
+* 400 : Failed to log in due to invalid input
+  * email or password not provided
+  * user with the email provided has not been registered
+  * password is incorrect for the account
+* 500 : Some error occurred while processing
