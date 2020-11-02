@@ -18,11 +18,6 @@ connect()
 
 app.use("/",router)
 
-app.use((req, res) => {
-    res.status(404).json({
-        error: "unknown path specified"
-    })
-})
 
 const server = app.listen(port, () => {
     console.log(`listening on port: ${port}`)

@@ -34,7 +34,7 @@ function isValidEmail(email){
     if(email.includes(" ")){
         return false
     }
-    const regex = /\S+@\S+\.\S+/
+    const regex = /\S+@(\S+\.)+\S+/
     return regex.test(email)
 }
 

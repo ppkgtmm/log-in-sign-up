@@ -1,7 +1,7 @@
 const { doesMatch } = require("../utils/hash")
 const { getOne } = require("../utils/database")
 const response = require("../utils/response")
-const filter = require("../utils/object")
+const {filter} = require("../utils/object")
 const { generateToken, decode } = require("../utils/jwt")
 const user = require("../models/user")
 

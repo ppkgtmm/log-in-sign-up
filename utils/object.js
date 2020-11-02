@@ -16,4 +16,13 @@ function keyExist(object, key) {
         return false
     }
 }
-module.exports = { filter, keyExist }
+
+function containOnlyWantedKeys(object, keyList) {
+    if(Object.keys(object).length !== keyList.length){
+        return false
+    }
+    const keys = Object.keys(object).filter(key => !keyList.includes(key))
+    return keys.length === 0
+}
+
+module.exports = { filter, keyExist, containOnlyWantedKeys }
