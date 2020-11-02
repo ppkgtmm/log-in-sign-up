@@ -14,20 +14,27 @@ const testData = {
     password: "somepassword"
 }
 
+function responseTester(res, expected){
+    res.should.have.status(expected.status)
+    res.body.should.be.a("object")
+}
+function responseDataTester(res, expected) {
+    res.body.should.have.property(expected.field)
+    res.body[expected.field].should.be.a("object")
+    res.body[expected.field].should.satisfy((items) => {
+        return Object.keys(items).length === expected.keys.length
+    })
+    res.body[expected.field].should.satisfy((items) => containOnlyWantedKeys(items, expected.keys))
+}
+
 
 describe("Test user API",() =>{
     describe("Test sign up", () => {
         it("Case no data provided", () => {
             return chai.request(server).post("/v1/signup/").then((res) => {
-                const expectedKeys = ["firstname", "lastname", "email", "password"]
-                res.should.have.status(400)
-                res.body.should.be.a("object")
-                res.body.should.have.property("messages")
-                res.body.messages.should.be.a("object")
-                res.body.messages.should.satisfy((messages) => {
-                    return Object.keys(messages).length === 4
-                })
-                res.body.messages.should.satisfy((messages) => containOnlyWantedKeys(messages, expectedKeys))
+                const keys = ["firstname", "lastname", "email", "password"]
+                responseTester(res, { status: 400 })
+                responseDataTester(res, { field: "messages",  keys })
             })
         })
     
@@ -39,15 +46,9 @@ describe("Test user API",() =>{
                     lastname: "",
                     password: ""
                 }).then((res) => {
-                    const expectedKeys = ["firstname", "lastname", "password"]
-                    res.should.have.status(400)
-                    res.body.should.be.a("object")
-                    res.body.should.have.property("messages")
-                    res.body.messages.should.be.a("object")
-                    res.body.messages.should.satisfy((messages) => {
-                        return Object.keys(messages).length === 3
-                    })
-                    res.body.messages.should.satisfy((messages) => containOnlyWantedKeys(messages, expectedKeys))
+                    const keys = ["firstname", "lastname", "password"]
+                    responseTester(res, { status: 400 })
+                    responseDataTester(res, { field: "messages",  keys })
                 })
             })
             it("Invalid data provided", () => {
@@ -56,15 +57,9 @@ describe("Test user API",() =>{
                     password: "2345",
                     abc: "><><"
                 }).then((res) => {
-                    const expectedKeys = ["password"]
-                    res.should.have.status(400)
-                    res.body.should.be.a("object")
-                    res.body.should.have.property("messages")
-                    res.body.messages.should.be.a("object")
-                    res.body.messages.should.satisfy((messages) => {
-                        return Object.keys(messages).length === 1
-                    })
-                    res.body.messages.should.satisfy((messages) => containOnlyWantedKeys(messages, expectedKeys))
+                    const keys = ["password"]
+                    responseTester(res, { status: 400 })
+                    responseDataTester(res, { field: "messages",  keys })
                 })
             })
     
@@ -76,15 +71,9 @@ describe("Test user API",() =>{
                     password: "2345",
                     abc: "><><"
                 }).then((res) => {
-                    const expectedKeys = ["firstname", "lastname", "password"]
-                    res.should.have.status(400)
-                    res.body.should.be.a("object")
-                    res.body.should.have.property("messages")
-                    res.body.messages.should.be.a("object")
-                    res.body.messages.should.satisfy((messages) => {
-                        return Object.keys(messages).length === 3
-                    })
-                    res.body.messages.should.satisfy((messages) => containOnlyWantedKeys(messages, expectedKeys))
+                    const keys = ["firstname", "lastname", "password"]
+                    responseTester(res, { status: 400 })
+                    responseDataTester(res, { field: "messages",  keys })
                 })
             })
         
@@ -94,15 +83,9 @@ describe("Test user API",() =>{
                     ...testData,
                     abc: "><><"
                 }).then((res) => {
-                    const expectedKeys = ["firstname", "lastname", "email"]
-                    res.should.have.status(201)
-                    res.body.should.be.a("object")
-                    res.body.should.have.property("data")
-                    res.body.data.should.be.a("object")
-                    res.body.data.should.satisfy((messages) => {
-                        return Object.keys(messages).length === 3
-                    })
-                    res.body.data.should.satisfy((messages) => containOnlyWantedKeys(messages, expectedKeys))
+                    const keys = ["firstname", "lastname", "email"]
+                    responseTester(res, { status: 201 })
+                    responseDataTester(res, { field: "data",  keys })
                 })
             })
     
@@ -112,15 +95,9 @@ describe("Test user API",() =>{
                     ...testData,
                     abc: "><><"
                 }).then((res) => {
-                    const expectedKeys = ["email"]
-                    res.should.have.status(400)
-                    res.body.should.be.a("object")
-                    res.body.should.have.property("messages")
-                    res.body.messages.should.be.a("object")
-                    res.body.messages.should.satisfy((messages) => {
-                        return Object.keys(messages).length === 1
-                    })
-                    res.body.messages.should.satisfy((messages) => containOnlyWantedKeys(messages, expectedKeys))
+                    const keys = ["email"]
+                    responseTester(res, { status: 400 })
+                    responseDataTester(res, { field: "messages",  keys })
                 })
             })
     
@@ -131,16 +108,10 @@ describe("Test user API",() =>{
                     email: "abc@gmail.co.th",
                     abc: "><><"
                 }).then((res) => {
-                    const expectedKeys = ["firstname", "lastname", "email"]
-                    res.should.have.status(201)
-                    res.body.should.be.a("object")
-                    res.body.should.have.property("data")
-                    res.body.data.should.be.a("object")
-                    res.body.data.should.satisfy((messages) => {
-                        return Object.keys(messages).length === 3
-                    })
-                    res.body.data.should.satisfy((messages) => containOnlyWantedKeys(messages, expectedKeys))
-                })
+                    const keys = ["firstname", "lastname", "email"]
+                    responseTester(res, { status: 201 })
+                    responseDataTester(res, { field: "data",  keys })
+               })
             })
         
         })
@@ -154,15 +125,9 @@ describe("Test user API",() =>{
                     email: "acb123.com",
                     password: ""
                 }).then((res) => {
-                    const expectedKeys = ["firstname", "lastname", "email", "password"]
-                    res.should.have.status(400)
-                    res.body.should.be.a("object")
-                    res.body.should.have.property("messages")
-                    res.body.messages.should.be.a("object")
-                    res.body.messages.should.satisfy((messages) => {
-                        return Object.keys(messages).length === 4
-                    })
-                    res.body.messages.should.satisfy((messages) => containOnlyWantedKeys(messages, expectedKeys))
+                    const keys = ["firstname", "lastname", "email", "password"]
+                    responseTester(res, { status: 400 })
+                    responseDataTester(res, { field: "messages",  keys })
                 })
             })
             it("Invalid data provided", () => {
@@ -173,15 +138,9 @@ describe("Test user API",() =>{
                     password: "2345",
                     abc: "><><"
                 }).then((res) => {
-                    const expectedKeys = ["email", "password"]
-                    res.should.have.status(400)
-                    res.body.should.be.a("object")
-                    res.body.should.have.property("messages")
-                    res.body.messages.should.be.a("object")
-                    res.body.messages.should.satisfy((messages) => {
-                        return Object.keys(messages).length === 2
-                    })
-                    res.body.messages.should.satisfy((messages) => containOnlyWantedKeys(messages, expectedKeys))
+                    const keys = ["email", "password"]
+                    responseTester(res, { status: 400 })
+                    responseDataTester(res, { field: "messages",  keys })
                 })
             })
     
@@ -194,15 +153,9 @@ describe("Test user API",() =>{
                     email: "123456@.com",
                     abc: "><><"
                 }).then((res) => {
-                    const expectedKeys = ["firstname", "lastname", "email", "password"]
-                    res.should.have.status(400)
-                    res.body.should.be.a("object")
-                    res.body.should.have.property("messages")
-                    res.body.messages.should.be.a("object")
-                    res.body.messages.should.satisfy((messages) => {
-                        return Object.keys(messages).length === 4
-                    })
-                    res.body.messages.should.satisfy((messages) => containOnlyWantedKeys(messages, expectedKeys))
+                    const keys = ["firstname", "lastname", "email", "password"]
+                    responseTester(res, { status: 400 })
+                    responseDataTester(res, { field: "messages",  keys })
                 })
             })
     
@@ -212,15 +165,9 @@ describe("Test user API",() =>{
                 email: "123%@000",
                 abc: "><><"
             }).then((res) => {
-                const expectedKeys = ["email"]
-                res.should.have.status(400)
-                res.body.should.be.a("object")
-                res.body.should.have.property("messages")
-                res.body.messages.should.be.a("object")
-                res.body.messages.should.satisfy((messages) => {
-                    return Object.keys(messages).length === 1
-                })
-                res.body.messages.should.satisfy((messages) => containOnlyWantedKeys(messages, expectedKeys))
+                const keys = ["email"]
+                responseTester(res, { status: 400 })
+                responseDataTester(res, { field: "messages",  keys })
                 })
             })  
         })
@@ -229,30 +176,18 @@ describe("Test user API",() =>{
         describe("not enough data provided", () => {
             it("Nothing provided", () => {
                 return chai.request(server).post("/v1/login/").then((res) => {
-                    const expectedKeys = ["error"]
-                    res.should.have.status(400)
-                    res.body.should.be.a("object")
-                    res.body.should.have.property("messages")
-                    res.body.messages.should.be.a("object")
-                    res.body.messages.should.satisfy((messages) => {
-                        return Object.keys(messages).length === 1
-                    })
-                    res.body.messages.should.satisfy((messages) => containOnlyWantedKeys(messages, expectedKeys))
+                    const keys = ["error"]
+                    responseTester(res, { status: 400 })
+                    responseDataTester(res, { field: "messages",  keys })
                 })
             })
             it("No password provided", () => {
                 return chai.request(server).post("/v1/login/").send({
                     email: testData.email
                 }).then((res) => {
-                    const expectedKeys = ["error"]
-                    res.should.have.status(400)
-                    res.body.should.be.a("object")
-                    res.body.should.have.property("messages")
-                    res.body.messages.should.be.a("object")
-                    res.body.messages.should.satisfy((messages) => {
-                        return Object.keys(messages).length === 1
-                    })
-                    res.body.messages.should.satisfy((messages) => containOnlyWantedKeys(messages, expectedKeys))
+                    const keys = ["error"]
+                    responseTester(res, { status: 400 })
+                    responseDataTester(res, { field: "messages",  keys })
                 })
             })
         })
@@ -262,15 +197,9 @@ describe("Test user API",() =>{
                 return chai.request(server).post("/v1/login/").send({
                     email: "abcdef4@"
                 }).then((res) => {
-                    const expectedKeys = ["error"]
-                    res.should.have.status(400)
-                    res.body.should.be.a("object")
-                    res.body.should.have.property("messages")
-                    res.body.messages.should.be.a("object")
-                    res.body.messages.should.satisfy((messages) => {
-                        return Object.keys(messages).length === 1
-                    })
-                    res.body.messages.should.satisfy((messages) => containOnlyWantedKeys(messages, expectedKeys))
+                    const keys = ["error"]
+                    responseTester(res, { status: 400 })
+                    responseDataTester(res, { field: "messages",  keys })
                 })
             })
     
@@ -279,15 +208,10 @@ describe("Test user API",() =>{
                     ...testData,
                     password: "1234567"
                 }).then((res) => {
-                    const expectedKeys = ["error"]
-                    res.should.have.status(400)
-                    res.body.should.be.a("object")
-                    res.body.should.have.property("messages")
-                    res.body.messages.should.be.a("object")
-                    res.body.messages.should.satisfy((messages) => {
-                        return Object.keys(messages).length === 1
-                    })
-                    res.body.messages.should.satisfy((messages) => containOnlyWantedKeys(messages, expectedKeys))
+                    const keys = ["error"]
+                    responseTester(res, { status: 400 })
+                    responseDataTester(res, { field: "messages",  keys })
+
                 })
             })
             
@@ -295,15 +219,9 @@ describe("Test user API",() =>{
                 return chai.request(server).post("/v1/login/").send({
                     ...testData
                 }).then((res) => {
-                    const expectedKeys = ["firstname", "lastname", "email", "token"]
-                    res.should.have.status(200)
-                    res.body.should.be.a("object")
-                    res.body.should.have.property("data")
-                    res.body.data.should.be.a("object")
-                    res.body.data.should.satisfy((messages) => {
-                        return Object.keys(messages).length === 4
-                    })
-                    res.body.data.should.satisfy((messages) => containOnlyWantedKeys(messages, expectedKeys))
+                    const keys = ["firstname", "lastname", "email", "token"]
+                    responseTester(res, { status: 200 })
+                    responseDataTester(res, { field: "data",  keys })
                 })
             })
         })
