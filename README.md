@@ -18,6 +18,7 @@ a user may have the following information stored
   "token": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c"  
 }
 ```
+* password is encrypted before storing
 ## API Endpoints
 ### Sign up
 ```
@@ -33,3 +34,14 @@ a user may have the following information stored
 }
 ```
 * all fields according to the example above should be specified
+##### Response example (case with no errors)
+```
+{
+  "success": true,
+  "data": {
+    "firstname": "Andy",
+    "lastname": "Smith",
+    "email": "andy.s@and.co.op"
+  }
+}
+```
