@@ -10,7 +10,7 @@ git clone https://github.com/ppkgtmm/log-in-sign-up.git user-api
 ```
 cd user-api
 ```
-4. Run the application using docker compose in background
+4. Run the application in background using docker compose
 ```
 docker-compose up -d
 ```
