@@ -9,10 +9,11 @@ services:
             context: .
             args: 
                 PORT: ${PORT}
+                ENV: ${ENV}
         ports: 
             - 3000:${PORT}
-        volumes:
-            - ".:/app:rw"
+        depends_on: 
+            - mongo
         links:
             - mongo
     mongo:
