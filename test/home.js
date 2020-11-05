@@ -5,7 +5,7 @@ const server = require("../index")
 chai.use(chaiHttp)
 chai.should()
 describe("Test home page", () => {
-    it("GET /", () => {
+    it("GET /", async () => {
         return chai.request(server)
         .get("/")
         .then((res) => {

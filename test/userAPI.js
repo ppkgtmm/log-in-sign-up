@@ -30,7 +30,7 @@ function responseDataTester(res, expected) {
 
 describe("Test user API",() =>{
     describe("Test sign up", () => {
-        it("Case no data provided", () => {
+        it("Case no data provided", async () => {
             return chai.request(server).post("/v1/signup/").then((res) => {
                 const keys = ["firstname", "lastname", "email", "password"]
                 responseTester(res, { status: 400 })
@@ -39,7 +39,7 @@ describe("Test user API",() =>{
         })
     
         describe("Valid email", () => {
-            it("Not enough data provided", () => {
+            it("Not enough data provided", async () => {
                 return chai.request(server).post("/v1/signup/").send({
                     ...testData,
                     firstname: undefined,
@@ -51,7 +51,7 @@ describe("Test user API",() =>{
                     responseDataTester(res, { field: "messages",  keys })
                 })
             })
-            it("Invalid data provided", () => {
+            it("Invalid data provided", async () => {
                 return chai.request(server).post("/v1/signup/").send({
                     ...testData,
                     password: "2345",
@@ -63,7 +63,7 @@ describe("Test user API",() =>{
                 })
             })
     
-            it("Not enough and invalid data provided", () => {
+            it("Not enough and invalid data provided", async () => {
                 return chai.request(server).post("/v1/signup/").send({
                     ...testData,
                     firstname: "",
@@ -77,7 +77,7 @@ describe("Test user API",() =>{
                 })
             })
         
-            it("Valid and enough data provided", () => {
+            it("Valid and enough data provided", async () => {
                 return chai.request(server).post("/v1/signup/")
                 .send({
                     ...testData,
@@ -89,7 +89,7 @@ describe("Test user API",() =>{
                 })
             })
     
-            it("Not unique email", () => {
+            it("Not unique email", async () => {
                 return chai.request(server).post("/v1/signup/")
                 .send({
                     ...testData,
@@ -101,7 +101,7 @@ describe("Test user API",() =>{
                 })
             })
     
-            it("Valid and enough data provided 2", () => {
+            it("Valid and enough data provided 2", async () => {
                 return chai.request(server).post("/v1/signup/")
                 .send({
                     ...testData,
@@ -117,7 +117,7 @@ describe("Test user API",() =>{
         })
     
         describe("Invalid email", () => {
-            it("Not enough data provided", () => {
+            it("Not enough data provided", async () => {
                 return chai.request(server).post("/v1/signup/").send({
                     ...testData,
                     firstname: undefined,
@@ -130,7 +130,7 @@ describe("Test user API",() =>{
                     responseDataTester(res, { field: "messages",  keys })
                 })
             })
-            it("Invalid data provided", () => {
+            it("Invalid data provided", async () => {
                 return chai.request(server).post("/v1/signup/").send({
                     ...testData,
                     firstname: randomString({length: 128}),
@@ -144,7 +144,7 @@ describe("Test user API",() =>{
                 })
             })
     
-            it("Not enough and invalid data provided", () => {
+            it("Not enough and invalid data provided", async () => {
                return chai.request(server).post("/v1/signup/").send({
                     ...testData,
                     firstname: "",
@@ -159,7 +159,7 @@ describe("Test user API",() =>{
                 })
             })
     
-            it("Only email is invalid", () => {
+            it("Only email is invalid", async () => {
             return chai.request(server).post("/v1/signup/").send({
                 ...testData,
                 email: "123%@000",
@@ -174,14 +174,14 @@ describe("Test user API",() =>{
     })
     describe("Test login", () => {
         describe("not enough data provided", () => {
-            it("Nothing provided", () => {
+            it("Nothing provided", async () => {
                 return chai.request(server).post("/v1/login/").then((res) => {
                     const keys = ["error"]
                     responseTester(res, { status: 400 })
                     responseDataTester(res, { field: "messages",  keys })
                 })
             })
-            it("No password provided", () => {
+            it("No password provided", async () => {
                 return chai.request(server).post("/v1/login/").send({
                     email: testData.email
                 }).then((res) => {
@@ -193,7 +193,7 @@ describe("Test user API",() =>{
         })
 
         describe("Enough data provided", () => {
-            it("User doesn't exist", () => {
+            it("User doesn't exist", async () => {
                 return chai.request(server).post("/v1/login/").send({
                     email: "abcdef4@"
                 }).then((res) => {
@@ -203,7 +203,7 @@ describe("Test user API",() =>{
                 })
             })
     
-            it("User exist but incorrect password", () => {
+            it("User exist but incorrect password", async () => {
                 return chai.request(server).post("/v1/login/").send({
                     ...testData,
                     password: "1234567"
@@ -215,7 +215,7 @@ describe("Test user API",() =>{
                 })
             })
             
-            it("User exist and correct password", () => {
+            it("User exist and correct password", async () => {
                 return chai.request(server).post("/v1/login/").send({
                     ...testData
                 }).then((res) => {
