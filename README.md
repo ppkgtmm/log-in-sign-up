@@ -14,6 +14,10 @@ cd user-api
 ```
 docker-compose up -d
 ```
+## Tear down
+```
+docker-compose down
+```
 ## Data
 a user may have the following information stored
 1. firstname
@@ -98,7 +102,3 @@ a user may have the following information stored
   * user with the email provided has not been registered
   * password is incorrect for the account
 * 500 : Some error occurred while processing
-## Tear down
-```
-docker-compose down
-```
