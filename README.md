@@ -1,13 +1,26 @@
 # log-in-sign-up
 Simple log in and sign up API created to practice using Node.js, express and mongoDB
-
+## Set up
+1. Install [Docker Desktop](https://www.docker.com/products/docker-desktop) (if not installed)
+2. Clone this repository
+```
+git clone https://github.com/ppkgtmm/log-in-sign-up.git user-api
+```
+3. Go to project directory
+```
+cd user-api
+```
+4. Run the application in background using docker compose
+```
+docker-compose up -d
+```
 ## Data
 a user may have the following information stored
-* firstname
-* lastname
-* email
-* password
-* access token
+1. firstname
+2. lastname
+3. email
+4. password
+5. access token
 #### Example
 ```
 {
@@ -22,7 +35,7 @@ a user may have the following information stored
 ## API Endpoints
 ### Sign up
 ```
-  POST /v1/signup
+  POST http://localhost:3000/v1/signup
 ```
 ##### Request body example
 ```
@@ -47,7 +60,7 @@ a user may have the following information stored
 ```
 ### Log in
 ```
-  POST /v1/login
+  POST http://localhost:3000/v1/login
 ```
 ##### Request body example
 ```
@@ -85,3 +98,7 @@ a user may have the following information stored
   * user with the email provided has not been registered
   * password is incorrect for the account
 * 500 : Some error occurred while processing
+## Tear down
+```
+docker-compose down
+```
