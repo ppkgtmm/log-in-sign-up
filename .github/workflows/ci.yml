@@ -22,6 +22,10 @@ jobs:
       uses: actions/setup-node@v1
       with:
         node-version: ${{ matrix.node-version }}
+    - run: docker pull mongo:latest
+    - run: docker run --name mongo -d  -p 27017:27017 mongo
     - run: npm ci
     - run: npm run build --if-present
     - run: npm test
+    - run: docker stop mongo
+    - run: docker rm mongo
