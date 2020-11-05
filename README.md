@@ -26,7 +26,7 @@ a user may have the following information stored
 4. password
 5. access token
 #### Example
-```
+```json
 {
   "firstname": "Andy",
   "lastname": "Smith",
@@ -38,11 +38,11 @@ a user may have the following information stored
 * password is encrypted before storing
 ## API Endpoints
 ### Sign up
-```
+```http
   POST http://localhost:3000/v1/signup
 ```
 ##### Request body example
-```
+```json
 {
   "firstname": "Andy",
   "lastname": "Smith",
@@ -52,7 +52,7 @@ a user may have the following information stored
 ```
 * all fields according to the example above should be specified
 ##### Response example (case with no errors)
-```
+```json
 {
   "success": true,
   "data": {
@@ -63,11 +63,11 @@ a user may have the following information stored
 }
 ```
 ### Log in
-```
+```http
   POST http://localhost:3000/v1/login
 ```
 ##### Request body example
-```
+```json
 {
   "email": "andy.s@and.co.op",
   "password" "123gogogo" 
@@ -75,7 +75,7 @@ a user may have the following information stored
 ```
 * all fields according to the example above should be specified
 ##### Response example (case with no errors)
-```
+```json
 {
   "success": true,
   "data": {
