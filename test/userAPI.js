@@ -1,6 +1,6 @@
 const chai = require("chai")
 const chaiHttp = require("chai-http")
-const randomString = require('random-string');
+const randomString = require("random-string")
 const server = require("../index")
 const { containOnlyWantedKeys } = require("../utils/object")
 
@@ -79,96 +79,100 @@ describe("Test user API",() =>{
         
             it("Valid and enough data provided", async () => {
                 return chai.request(server).post("/v1/signup/")
-                .send({
-                    ...testData,
-                    abc: "><><"
-                }).then((res) => {
-                    const keys = ["firstname", "lastname", "email"]
-                    responseTester(res, { status: 201 })
-                    responseDataTester(res, { field: "data",  keys })
-                })
+                    .send({
+                        ...testData,
+                        abc: "><><"
+                    }).then((res) => {
+                        const keys = ["firstname", "lastname", "email"]
+                        responseTester(res, { status: 201 })
+                        responseDataTester(res, { field: "data",  keys })
+                    })
             })
     
             it("Not unique email", async () => {
                 return chai.request(server).post("/v1/signup/")
-                .send({
-                    ...testData,
-                    abc: "><><"
-                }).then((res) => {
-                    const keys = ["email"]
-                    responseTester(res, { status: 400 })
-                    responseDataTester(res, { field: "messages",  keys })
-                })
+                    .send({
+                        ...testData,
+                        abc: "><><"
+                    }).then((res) => {
+                        const keys = ["email"]
+                        responseTester(res, { status: 400 })
+                        responseDataTester(res, { field: "messages",  keys })
+                    })
             })
     
             it("Valid and enough data provided 2", async () => {
                 return chai.request(server).post("/v1/signup/")
-                .send({
-                    ...testData,
-                    email: "abc@gmail.co.th",
-                    abc: "><><"
-                }).then((res) => {
-                    const keys = ["firstname", "lastname", "email"]
-                    responseTester(res, { status: 201 })
-                    responseDataTester(res, { field: "data",  keys })
-               })
+                    .send({
+                        ...testData,
+                        email: "abc@gmail.co.th",
+                        abc: "><><"
+                    }).then((res) => {
+                        const keys = ["firstname", "lastname", "email"]
+                        responseTester(res, { status: 201 })
+                        responseDataTester(res, { field: "data",  keys })
+                    })
             })
         
         })
     
         describe("Invalid email", () => {
             it("Not enough data provided", async () => {
-                return chai.request(server).post("/v1/signup/").send({
-                    ...testData,
-                    firstname: undefined,
-                    lastname: "",
-                    email: "acb123.com",
-                    password: ""
-                }).then((res) => {
-                    const keys = ["firstname", "lastname", "email", "password"]
-                    responseTester(res, { status: 400 })
-                    responseDataTester(res, { field: "messages",  keys })
-                })
+                return chai.request(server).post("/v1/signup/")
+                    .send({
+                        ...testData,
+                        firstname: undefined,
+                        lastname: "",
+                        email: "acb123.com",
+                        password: ""
+                    }).then((res) => {
+                        const keys = ["firstname", "lastname", "email", "password"]
+                        responseTester(res, { status: 400 })
+                        responseDataTester(res, { field: "messages",  keys })
+                    })
             })
             it("Invalid data provided", async () => {
-                return chai.request(server).post("/v1/signup/").send({
-                    ...testData,
-                    firstname: randomString({length: 128}),
-                    email: "ooopdoo.123.com",
-                    password: "2345",
-                    abc: "><><"
-                }).then((res) => {
-                    const keys = ["email", "password"]
-                    responseTester(res, { status: 400 })
-                    responseDataTester(res, { field: "messages",  keys })
-                })
+                return chai.request(server).post("/v1/signup/")
+                    .send({
+                        ...testData,
+                        firstname: randomString({length: 128}),
+                        email: "ooopdoo.123.com",
+                        password: "2345",
+                        abc: "><><"
+                    }).then((res) => {
+                        const keys = ["email", "password"]
+                        responseTester(res, { status: 400 })
+                        responseDataTester(res, { field: "messages",  keys })
+                    })
             })
     
             it("Not enough and invalid data provided", async () => {
-               return chai.request(server).post("/v1/signup/").send({
-                    ...testData,
-                    firstname: "",
-                    lastname: undefined,
-                    password: "2345",
-                    email: "123456@.com",
-                    abc: "><><"
-                }).then((res) => {
-                    const keys = ["firstname", "lastname", "email", "password"]
-                    responseTester(res, { status: 400 })
-                    responseDataTester(res, { field: "messages",  keys })
-                })
+                return chai.request(server).post("/v1/signup/")
+                    .send({
+                        ...testData,
+                        firstname: "",
+                        lastname: undefined,
+                        password: "2345",
+                        email: "123456@.com",
+                        abc: "><><"
+                    }).then((res) => {
+                        const keys = ["firstname", "lastname", "email", "password"]
+                        responseTester(res, { status: 400 })
+                        responseDataTester(res, { field: "messages",  keys })
+                    })
             })
     
             it("Only email is invalid", async () => {
-            return chai.request(server).post("/v1/signup/").send({
-                ...testData,
-                email: "123%@000",
-                abc: "><><"
-            }).then((res) => {
-                const keys = ["email"]
-                responseTester(res, { status: 400 })
-                responseDataTester(res, { field: "messages",  keys })
-                })
+                return chai.request(server).post("/v1/signup/")
+                    .send({
+                        ...testData,
+                        email: "123%@000",
+                        abc: "><><"
+                    }).then((res) => {
+                        const keys = ["email"]
+                        responseTester(res, { status: 400 })
+                        responseDataTester(res, { field: "messages",  keys })
+                    })
             })  
         })
     })
