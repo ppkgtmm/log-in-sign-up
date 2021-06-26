@@ -1,21 +1,18 @@
 function respond(res, code, headers, messages, data) {
-
     res.set({ ...headers })
     res.status(code)
-    
-    if(code >= 200 && code < 300){
+
+    if (code >= 200 && code < 300) {
         res.json({
             success: true,
-            data
+            data,
         })
-    }
-    else{
+    } else {
         res.json({
             success: false,
-            messages
+            messages,
         })
     }
-
 }
 
 module.exports = respond

@@ -1,70 +1,64 @@
-
-async function getDocument(query){
+async function getDocument(query) {
     const promise = query.exec()
-    return await promise.then(document => {
-        if(document && document._doc){
+    return await promise.then((document) => {
+        if (document && document._doc) {
             return {
                 error: false,
                 document: {
-                    ...document._doc
-                }
+                    ...document._doc,
+                },
             }
         }
         return { error: false }
-    }).catch( error => {
-        if(error){
+    }).catch((error) => {
+        if (error) {
             return { error: true }
         }
     })
 }
 
 async function handelSelectSome(model, wanted, condition) {
-    const columns = wanted.reduce((sum, current) => {
-        return `${sum} ${current}`
-    }).trim()
-    const query  = model.findOne(condition).select(columns)
+    const columns = wanted.reduce((sum, current) => `${sum} ${current}`).trim()
+    const query = model.findOne(condition).select(columns)
     return await getDocument(query)
 }
 
 async function handleSelectAll(model, condition) {
-    const query  = model.findOne(condition)
+    const query = model.findOne(condition)
     return await getDocument(query)
 }
 
-async function getOne(fields, values, model, wanted){
-    let condition = { }
-    if(fields.length !== values.length){
+async function getOne(fields, values, model, wanted) {
+    const condition = { }
+    if (fields.length !== values.length) {
         return { error: true }
     }
-    for(let i in values){
+    for (const i in values) {
         condition[fields[i]] = values[i]
     }
-    if(wanted && wanted.length>0){
+    if (wanted && wanted.length > 0) {
         return await handelSelectSome(model, wanted, condition)
     }
-    else{
-        return await handleSelectAll(model, condition)
-    }
+
+    return await handleSelectAll(model, condition)
 }
 
 async function save(newObject) {
-    try{
+    try {
         const savedUser = await newObject.save()
-        if(savedUser && savedUser._doc){
+        if (savedUser && savedUser._doc) {
             return {
                 error: false,
-                _doc: savedUser._doc
+                _doc: savedUser._doc,
             }
         }
         return { error: true }
-    }
-    catch(error){
+    } catch (error) {
         console.log(error)
         return { error: true }
     }
 }
 
-
-module.exports =  {
-    getOne, save
-} 
+module.exports = {
+    getOne, save,
+}

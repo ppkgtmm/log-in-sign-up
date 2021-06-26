@@ -1,15 +1,17 @@
-const mongoose = require("mongoose")
-const config = require("../config")
+const mongoose = require('mongoose')
 
 function connect() {
-    let url = process.env.DB_URL
-    mongoose.connect(url,{ useNewUrlParser: true, useUnifiedTopology: true }, function(error) {
-        if(error){
-            console.log(error)
-        }
-        else{
-            console.log("Connected to database")
-        }
-    })
+    const url = process.env.DB_URL
+    mongoose.connect(
+        url,
+        { useNewUrlParser: true, useUnifiedTopology: true },
+        (error) => {
+            if (error) {
+                console.log(error)
+            } else {
+                console.log('Connected to database')
+            }
+        },
+    )
 }
 module.exports = connect

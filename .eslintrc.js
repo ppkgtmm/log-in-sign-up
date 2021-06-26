@@ -1,12 +1,19 @@
 module.exports = {
     env: {
+        browser: true,
         commonjs: true,
         es2021: true,
-        node: true
+        node: true,
+        mocha: true
     },
-    extends: ['prettier', 'airbnb-base'],
+    extends: 'eslint:recommended',
     parserOptions: {
         ecmaVersion: 12
     },
-    rules: {}
+    rules: {
+        indent: ['error', 4],
+        'linebreak-style': ['error', 'unix'],
+        quotes: ['error', 'single'],
+        semi: ['error', 'never']
+    }
 }

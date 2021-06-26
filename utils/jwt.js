@@ -1,17 +1,17 @@
-const jwt = require("jsonwebtoken")
-const { KEY } = require("../config")
+const jwt = require('jsonwebtoken')
+const { KEY } = require('../config')
 
-function generateToken(user){
+function generateToken(user) {
     const payload = {
         email: user.email,
-        exp: new Date().getTime()*1000*60*60*24*7
+        exp: new Date().getTime() * 1000 * 60 * 60 * 24 * 7,
     }
     const options = {
-        issuer: "sign-in-sign-up"
+        issuer: 'sign-in-sign-up',
     }
-    return new Promise(function(resolve, reject){
-        jwt.sign(payload, KEY, options, function(err, token){
-            if (err){
+    return new Promise((resolve, reject) => {
+        jwt.sign(payload, KEY, options, (err, token) => {
+            if (err) {
                 reject(err)
                 return
             }
@@ -20,10 +20,10 @@ function generateToken(user){
     })
 }
 
-function decode(token){
-    return new Promise(function(resolve, reject){
-        jwt.verify(token, KEY, function(err, decoded){
-            if (err){
+function decode(token) {
+    return new Promise((resolve, reject) => {
+        jwt.verify(token, KEY, (err, decoded) => {
+            if (err) {
                 reject(err)
                 return
             }
@@ -32,4 +32,4 @@ function decode(token){
     })
 }
 
-module.exports = { generateToken , decode }
+module.exports = { generateToken, decode }

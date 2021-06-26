@@ -1,7 +1,7 @@
 function filter(object, wanted) {
     const result = {}
     wanted.forEach((key) => {
-        if(object[key]){
+        if (object[key]) {
             result[key] = object[key]
         }
     })
@@ -9,19 +9,19 @@ function filter(object, wanted) {
 }
 
 function keyExist(object, key) {
-    if(object && object[key]){
+    if (object && object[key]) {
         return true
     }
-    else if(object){
+    if (object) {
         return false
     }
 }
 
 function containOnlyWantedKeys(object, keyList) {
-    if(Object.keys(object).length !== keyList.length){
+    if (Object.keys(object).length !== keyList.length) {
         return false
     }
-    const keys = Object.keys(object).filter(key => !keyList.includes(key))
+    const keys = Object.keys(object).filter((key) => !keyList.includes(key))
     return keys.length === 0
 }
 
