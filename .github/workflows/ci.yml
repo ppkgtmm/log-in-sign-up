@@ -14,7 +14,6 @@ jobs:
   build:
 
     runs-on: ubuntu-latest
-
     strategy:
       matrix:
         node-version: [10.x, 12.x, 14.x]
@@ -33,6 +32,9 @@ jobs:
 
     - run: npm run lint
     - run: npm run test
+      env:
+        KEY: ${{ secrets.KEY }}
+        DB_URL: ${{ secrets.DB_URL }}
 
     - run: docker stop mongo
     - run: docker rm mongo
