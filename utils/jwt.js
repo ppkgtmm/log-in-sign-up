@@ -1,13 +1,13 @@
 const jwt = require('jsonwebtoken')
-const { KEY } = require('../config')
+const KEY = process.env.KEY
 
 function generateToken(user) {
     const payload = {
         email: user.email,
-        exp: new Date().getTime() * 1000 * 60 * 60 * 24 * 7,
+        exp: new Date().getTime() * 1000 * 60 * 60 * 24 * 7
     }
     const options = {
-        issuer: 'sign-in-sign-up',
+        issuer: 'sign-in-sign-up'
     }
     return new Promise((resolve, reject) => {
         jwt.sign(payload, KEY, options, (err, token) => {
