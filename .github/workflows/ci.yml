@@ -35,7 +35,7 @@ jobs:
     - run: npm ci
 
     - run: npm run lint
-    - run: DB_URL=${DB_URL} KEY=${KEY} npm run test
+    - run: npm run test
 
     - run: docker stop mongo
     - run: docker rm mongo
