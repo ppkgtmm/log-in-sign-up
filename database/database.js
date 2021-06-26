@@ -2,10 +2,7 @@ const mongoose = require("mongoose")
 const config = require("../config")
 
 function connect() {
-    let url = config.DATABASE.DEV
-    if(process.env.ENV && process.env.ENV === "PROD"){
-        url = config.DATABASE.PROD
-    }
+    let url = process.env.DB_URL
     mongoose.connect(url,{ useNewUrlParser: true, useUnifiedTopology: true }, function(error) {
         if(error){
             console.log(error)
