@@ -5,4 +5,4 @@ RUN npm install
 ADD . .
 ARG PORT
 ARG ENV
-CMD PORT=$PORT ENV=$ENV node index.js
+CMD node index.js
