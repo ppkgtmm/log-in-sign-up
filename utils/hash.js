@@ -1,19 +1,17 @@
-const bcrypt = require("bcrypt")
+const bcrypt = require('bcrypt')
 
 async function hash(data, saltRounds) {
-    try{
+    try {
         return await bcrypt.hash(data, saltRounds)
-    }
-    catch(error){
+    } catch (error) {
         console.log(error)
     }
 }
 
 async function doesMatch(password, hash) {
-    try{
+    try {
         return await bcrypt.compare(password, hash)
-    }
-    catch(error){
+    } catch (error) {
         console.log(error)
     }
 }

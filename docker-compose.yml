@@ -1,18 +1,15 @@
 version: "3.3"
-services: 
+services:
     app:
         container_name: app
         restart: always
-        env_file: 
+        env_file:
             - .env
         build:
             context: .
-            args: 
-                PORT: ${PORT}
-                ENV: ${ENV}
-        ports: 
+        ports:
             - 3000:${PORT}
-        depends_on: 
+        depends_on:
             - mongo
         links:
             - mongo
